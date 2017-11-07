@@ -41,7 +41,8 @@
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'User Id','name'=>'user_id','type'=>'hidden','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Deliverer Id','name'=>'deliverer_id','type'=>'hidden','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Deliverer Id','name'=>'deliverer_id','type'=>'hidden','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Offer Id','name'=>'id','type'=>'select2','datatable'=>'offers,id','datatable_ajax'=>false];
 			$this->form[] = ['label'=>'State','name'=>'state','type'=>'select','validation'=>'required|max:1|integer','width'=>'col-sm-10','dataenum'=>'0;1'];
 			$this->form[] = ['label'=>'Location','name'=>'location','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE

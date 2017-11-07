@@ -11,7 +11,7 @@ class OfferController extends Controller
 {
     public function index(){
 		
-		$offers = DB::table('offers')->get();;
+		$offers = DB::table('offers')->get();
 		
 		return response()->json(['data' => $offers], 200, [], JSON_NUMERIC_CHECK);
 		

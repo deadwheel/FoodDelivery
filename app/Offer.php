@@ -8,11 +8,13 @@ class Offer extends Model
 {
     protected $table = 'offers';
 	
-	
 	 public function orders(){
 		
 	     return $this->belongsToMany('App\Order'); 
 
 		
 	}
+	
+	
+	//protected $guarded = [];
 }

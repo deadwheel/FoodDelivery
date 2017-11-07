@@ -1,88 +1,56 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
 
+use Auth;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Order;
-use App\Offer;
+use App\OrderOffer;
+
+
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-
-	   $orders = Order::with('offers')->get()->toArray();
+    public function create(Request $request) {
 		
-       return view('order.index', ['orders' => $orders]);
-    }
+		   $area = json_decode($request->getContent(), true);
+		 
+		   
+		   $licznik = 0;
+			
+			$zamowienie = new Order;
+			$zamowienie->user_id = Auth::id();
+			
+			$zamowienie->save();
+			
+			$id_order = $zamowienie->id;
+			
+			foreach($area['order_details'] as $values)
+            {
+				$area['order_details'][$licznik]['order_id'] = $id_order;
+				$licznik++;
+			}
+			
+			print_r($area['order_details']);
+			
+			
+			for ($i = 0; $i <= 1; $i++) {
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+				$comment = new OrderOffer($area['order_details'][$i]);
+				$zamowienie->offers()->save($comment);
+			}
+			
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+			
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+			
+			
+			
+		
+		
+		
+		return response()->json(['data' => $area['order']], 200, [], JSON_NUMERIC_CHECK);
+		
+	} 
 }

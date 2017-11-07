@@ -14,6 +14,9 @@ class User extends \TCG\Voyager\Models\User
      *
      * @var array
      */
+	 
+	 protected $table = "cms_users";
+	 
     protected $fillable = [
         'name', 'email', 'password',
     ];

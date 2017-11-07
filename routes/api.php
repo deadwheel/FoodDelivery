@@ -27,6 +27,7 @@ Route::namespace('api')->group(function(){
 		
 		Route::post('/logout', 'UserController@logout');
 		Route::get('/offers','OfferController@index');
+		Route::post('/orders','OrderController@create');
 		Route::post('oauth/access_token', 'Auth\OAuth2Controller@issueToken');
 		});
 	
