@@ -31,6 +31,8 @@ class OrderController extends Controller
 				$area['order_details'][$licznik]['order_id'] = $id_order;
 				$licznik++;
 			}
+			// Jak da sie dopisac do tablic order_id w jakis prostszy sposob to mozesz przerobic tego foreacha
+			
 			
 			print_r($area['order_details']);
 			
@@ -38,10 +40,13 @@ class OrderController extends Controller
 			for ($i = 0; $i <= 1; $i++) {
 
 				$comment = new OrderOffer($area['order_details'][$i]);
-				$zamowienie->offers()->save($comment);
+				$zamowienie->offers()->save($comment); // blad Cannot add or update a child row: a foreign key constraint fails 
 			}
 			
 
+			// Zrob tak by zamiast tego fora wyzej dalo sie uzyc
+			// $zamowienie->offers()->createMany($area['order_details']);
+			// bo poki co to wywala blad attribute mass assignment
 			
 
 			
