@@ -4,9 +4,22 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
-
+	use CB;
 	class AdminOrdersController extends \crocodicstudio\crudbooster\controllers\CBController {
 
+	
+		public function getIndex() {
+  //First, Add an auth
+   if(!CRUDBooster::isView()) CRUDBooster::denyAccess();
+   
+   //Create your own query 
+   $data = [];
+   $data['page_title'] = 'Products Data';
+   $data['result'] = \App\Order::with('offers')->get();
+ 
+   //Create a view. Please use `cbView` method instead of view method from laravel.
+   $this->cbView('order.index',$data)->render();
+}
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE

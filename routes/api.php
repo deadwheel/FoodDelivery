@@ -22,11 +22,13 @@ Route::namespace('api')->group(function(){
 	Route::post('/refresh', 'UserController@refresh');
 	Route::post('/login','UserController@login');
 	Route::post('/register','UserController@register');
+	Route::post('/orders','OrderController@create');
 
 	Route::middleware('auth:api')->group(function(){
 		
 		Route::post('/logout', 'UserController@logout');
 		Route::get('/offers','OfferController@index');
+		
 		Route::post('oauth/access_token', 'Auth\OAuth2Controller@issueToken');
 		});
 	

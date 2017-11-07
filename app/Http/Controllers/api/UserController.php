@@ -24,12 +24,14 @@ use Response;
 		if (Auth::attempt(['email' => $request->username, 'password' => $request->password])) {
 		
 		$user = Auth::user();
+		
+		
 				
 		$params = [
 		
     		'grant_type' => 'password',
     		'client_id' => '2',
-    		'client_secret' => 'i9cX5gYJpk2ezZnVv1BhQm5GwGCMgsEaEdQgUiwm', 
+    		'client_secret' => DB::table('oauth_clients')->where('id', '2')->value('secret'), 
 			'password' => $request->password,
 			'username' => $request->username,
 			'scope' => '',	
@@ -48,7 +50,7 @@ use Response;
 		$response = Route::dispatch($proxy);	
 	  
     	$json = (array)json_decode($response->getContent());
-		$json['role_id'] = $user->role_id;
+		$json['role_id'] = $user->id;
 		$response->setContent(json_encode($json));
 		return $response;
 				
@@ -67,7 +69,7 @@ use Response;
 		
     		'grant_type' => 'refresh_token',
     		'client_id' => '2',
-    		'client_secret' => 'i9cX5gYJpk2ezZnVv1BhQm5GwGCMgsEaEdQgUiwm', 
+    		'client_secret' => DB::table('oauth_clients')->where('id', '2')->value('secret'), 
 			'password' => $request->password,
 			'scope' => '*'	
     		
@@ -124,7 +126,7 @@ use Response;
 		
     		'grant_type' => 'password',
     		'client_id' => '2',
-    		'client_secret' => 'i9cX5gYJpk2ezZnVv1BhQm5GwGCMgsEaEdQgUiwm', 
+    		'client_secret' => DB::table('oauth_clients')->where('id', '2')->value('secret'), 
 			'password' => $request->password,
 			'username' => $request->username,
 			'scope' => '*'	
