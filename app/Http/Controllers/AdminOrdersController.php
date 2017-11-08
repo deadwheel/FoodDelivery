@@ -4,22 +4,9 @@
 	use Request;
 	use DB;
 	use CRUDBooster;
-	use CB;
+
 	class AdminOrdersController extends \crocodicstudio\crudbooster\controllers\CBController {
 
-	
-		public function getIndex() {
-  //First, Add an auth
-   if(!CRUDBooster::isView()) CRUDBooster::denyAccess();
-   
-   //Create your own query 
-   $data = [];
-   $data['page_title'] = 'Products Data';
-   $data['result'] = \App\Order::with('offers')->get();
- 
-   //Create a view. Please use `cbView` method instead of view method from laravel.
-   $this->cbView('order.index',$data)->render();
-}
 	    public function cbInit() {
 
 			# START CONFIGURATION DO NOT REMOVE THIS LINE
@@ -54,7 +41,8 @@
 			# START FORM DO NOT REMOVE THIS LINE
 			$this->form = [];
 			$this->form[] = ['label'=>'User Id','name'=>'user_id','type'=>'hidden','width'=>'col-sm-10'];
-			$this->form[] = ['label'=>'Deliverer Id','name'=>'deliverer_id','type'=>'hidden','width'=>'col-sm-10'];
+			//$this->form[] = ['label'=>'Deliverer Id','name'=>'deliverer_id','type'=>'hidden','width'=>'col-sm-10'];
+			$this->form[] = ['label'=>'Offer Id','name'=>'id','type'=>'select2','datatable'=>'offers,id','datatable_ajax'=>false];
 			$this->form[] = ['label'=>'State','name'=>'state','type'=>'select','validation'=>'required|max:1|integer','width'=>'col-sm-10','dataenum'=>'0;1'];
 			$this->form[] = ['label'=>'Location','name'=>'location','type'=>'text','validation'=>'required|min:1|max:255','width'=>'col-sm-10'];
 			# END FORM DO NOT REMOVE THIS LINE

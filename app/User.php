@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
-class User extends \TCG\Voyager\Models\User
+
+class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
@@ -14,6 +16,9 @@ class User extends \TCG\Voyager\Models\User
      *
      * @var array
      */
+	 
+	 protected $table = "cms_users";
+	 
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -26,4 +31,11 @@ class User extends \TCG\Voyager\Models\User
     protected $hidden = [
         'password', 'remember_token',
     ];
+	
+	
+	public function details(){
+		
+		return $this->hasOne('App\UserDetails');
+			
+	}
 }
