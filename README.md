@@ -1,5 +1,7 @@
 # Food Delivery
+
 Laravel application for ordering food
+
 ### Requirements
 
 - Laravel 5.5
