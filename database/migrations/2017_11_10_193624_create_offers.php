@@ -13,6 +13,8 @@ class CreateOffers extends Migration
      */
     public function up()
     {
+		Schema::disableForeignKeyConstraints();
+	
         Schema::create('offers', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('name');

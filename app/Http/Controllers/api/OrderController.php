@@ -7,14 +7,34 @@ use Illuminate\Support\Facades\DB;
 use App\Order;
 use App\OrderOffer;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 class OrderController extends Controller
 {
-    public function create(Request $request) {
+ 
+	public function create(Request $request) {
+				
+				
 		
 		   $area = json_decode($request->getContent(), true);
-		 
-		   
-		   $licznik = 0;
+			
+	 
+		   $validator = Validator::make($area, [
+				
+				'order_details.*.offer_id' => 'required|exists:offers,id',
+				'order_details.*.quantity' => 'required|integer',
+				'order_address.*.isprofile' =>'required|boolean'
+	
+			]);
+			
+
+		   if ($validator->fails()) {
+			   
+				return response()->json(['error' => $validator->errors()], 200, [], JSON_NUMERIC_CHECK);
+			
+			}
+
+		    $licznik = 0;
 			
 			$zamowienie = new Order;
 			$zamowienie->user_id = Auth::id();
@@ -32,8 +52,10 @@ class OrderController extends Controller
 			
 			
 			for ($i = 0; $i <= 1; $i++) {
+				
 				$comment = new OrderOffer($area['order_details'][$i]);
 				$comment->save();
+				
 			}
 			
 			
@@ -45,4 +67,5 @@ class OrderController extends Controller
 		return response()->json(['data' => $area['order_details']], 200, [], JSON_NUMERIC_CHECK);
 		
 	} 
+
 }
