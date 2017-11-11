@@ -9,14 +9,15 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-        "crocodicstudio/crudbooster": "v5.4.0.10",
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "doctrine/dbal": "^2.6",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/cashier": "~7.0",
         "laravel/framework": "5.5.*",
         "laravel/passport": "^4.0",
         "laravel/tinker": "~1.0",
-        "tcg/voyager": "1.0.*"
+        "phpoffice/phpexcel": "^1.8"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

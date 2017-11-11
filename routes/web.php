@@ -23,3 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/orders','OrderController@index');
 	
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

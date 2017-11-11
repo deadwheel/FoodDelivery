@@ -23,10 +23,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-			$orders = \App\Order::with('offers')->get()->toArray();
-	
-			dd($orders);
-		
         return view('home');
     }
 }

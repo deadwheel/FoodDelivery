@@ -117,9 +117,9 @@ use Response;
     	]);
 
     	$user = User::create([
-    		'name' => request('name'),
-    		'email' => request('email'),
-    		'password' => bcrypt(request('password'))
+    		'name' => $request->name,
+    		'email' => $request->email,
+    		'password' => bcrypt($request->password)
     	]);
 		
 		$params = [
@@ -128,7 +128,7 @@ use Response;
     		'client_id' => '2',
     		'client_secret' => DB::table('oauth_clients')->where('id', '2')->value('secret'), 
 			'password' => $request->password,
-			'username' => $request->username,
+			'username' => $request->name,
 			'scope' => '*'	
     		
     	];
