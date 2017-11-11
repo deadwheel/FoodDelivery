@@ -1,5 +1,2 @@
-<<<<<<< HEAD
 Another line
-=======
 Jakas inna linia ktorej tu nie bylo
->>>>>>> first_laravel_merge_2
