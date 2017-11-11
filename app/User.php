@@ -11,6 +11,9 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+	
+	// Some text on begining 
+	
     /**
      * The attributes that are mass assignable.
      *
