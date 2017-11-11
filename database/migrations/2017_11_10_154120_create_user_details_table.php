@@ -13,6 +13,7 @@ class CreateUserDetailsTable extends Migration
      */
     public function up()
     {
+		 
         Schema::create('user_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
