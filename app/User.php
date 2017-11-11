@@ -38,4 +38,7 @@ class User extends Authenticatable
 		return $this->hasOne('App\UserDetails');
 			
 	}
+	
+	
+	// Jakis tekst na koncu
 }
