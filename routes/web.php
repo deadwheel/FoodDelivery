@@ -21,8 +21,17 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/orders','OrderController@index');
-	
+Route::get('/roles_create','roles_create@create_roles');
+
+
+Route::get('/attach','assign_user@attach_role');
+
+Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function() {
+    Route::get('/', 'admin\list_users@list');
+    Route::get('/users/edit/{id}', 'admin\list_users@edit');
+    Route::resource('users','admin\list_users');
+    Route::resource('roles', 'admin\Roles');
+});
 
 Auth::routes();
 

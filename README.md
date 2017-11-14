@@ -6,9 +6,9 @@ Laravel application for ordering food
 
 - Laravel 5.5
 - Passport
-- CrudBooster
 - Composer
 - Artisan
+- ENTRUST
 
 ### Installation
 
@@ -18,4 +18,14 @@ Download package and write some commands to be sure that everything will works f
 $ composer update
 $ php artisan migrate
 ```
+
+after this run:
+- yourhost.com/roles_create
+- yourhost.com/attach
+
+Roles_create is creating 2 roles:
+- Administrator
+- Driver
+
+Attach - user with id=1 will get the admin role 
 
