@@ -21,6 +21,13 @@ Route::middleware('auth:api')->get(/**
     return $request->user();
 });
 
+
+Route::middleware('auth:api')->group(function() {
+
+    Route::post('oauth/access_token', 'Auth\OAuth2Controller@issueToken');
+
+});
+
 Route::namespace('api')->group(function(){
 
 	Route::post('/refresh', 'UserController@refresh');
@@ -32,7 +39,6 @@ Route::namespace('api')->group(function(){
 		Route::post('/logout', 'UserController@logout');
 		Route::get('/offers','OfferController@index');
 		Route::post('/orders','OrderController@create');
-		Route::post('oauth/access_token', 'Auth\OAuth2Controller@issueToken');
 		});
 	
 });
