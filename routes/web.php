@@ -33,6 +33,12 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function() {
     Route::resource('roles', 'admin\Roles');
 });
 
+
+Route::group(['prefix' => 'waitress', 'middleware' => ['role:waitress|admin']], function() {
+    Route::resource('orders', 'waitress\Orders');
+    Route::post('/orders/test', 'waitress\Orders@test');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
