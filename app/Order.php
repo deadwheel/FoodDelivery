@@ -8,13 +8,20 @@ class Order extends Model
 {
 	protected $table = 'orders';
 	//protected $guarded = [];
+
+    protected $visible = ['id','det'];
 		
     public function offers(){
-		
+
         return $this->belongsToMany('App\Offer','orrderoffer','order_id','offer_id')->withPivot('order_id','offer_id','quantity');
 		
 		
 	}
+
+    public function users() {
+
+        return $this->belongsTo('App\User', 'user_id');
+    }
 	
 
 }

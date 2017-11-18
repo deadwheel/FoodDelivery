@@ -7,7 +7,8 @@ use Illuminate\Database\Query;
 class Offer extends Model
 {
     protected $table = 'offers';
-	protected $fillable = ['name','price','description'];	
+	protected $fillable = ['name','price','description'];
+	protected $visible = ['name', 'price', 'description', 'image'];
 	
 	public function orders(){
 		

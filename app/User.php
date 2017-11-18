@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Laravel\Passport\HasApiTokens;
 class User extends Authenticatable
 {
@@ -39,6 +40,12 @@ class User extends Authenticatable
     public function details(){
 
         return $this->hasOne('App\UserDetails');
+    }
+
+    public function orders() {
+
+        return $this->hasMany('App\Order');
+
     }
 
 }
