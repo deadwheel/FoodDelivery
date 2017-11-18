@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\User;
+use App\UserDetails;
+use function MongoDB\BSON\toJSON;
 use Response;
  
     class UserController extends Controller
@@ -140,5 +143,86 @@ use Response;
 
     	return Route::dispatch($proxy);
 		
-	}	
+	}
+
+
+
+	public function update_details(Request $request, $id) {
+
+	    if (Auth::id() == $id) {
+
+
+            // TODO Validacja ew poprawic
+            Validator::make($request->all(), [
+                'firstname' => 'nullable|alpha',
+                'lastname' => 'nullable|alpha',
+                'phonenumber' => 'nullable|numeric',
+                'address' => 'nullable|string',
+                'city' => 'nullable|string',
+                'postcode' => 'nullable|string',
+
+
+            ])->validate();
+
+            $user = User::find(Auth::id())->details;
+
+
+            if (is_null($user)) {
+
+                $userdet = new UserDetails;
+                $userdet->fill(request()->all());
+
+                $user = User::find(Auth::id());
+                $user->details()->save($userdet);
+
+                return response()->json(['user_details' => $user->details],'200');
+
+
+
+
+            } else {
+
+                $user->fill($request->all());
+                $user->save();
+
+                return response()->json(['user_details' => $user],'200');
+
+            }
+
+
+
+        }
+
+        else {
+
+
+	        return response()->json(['error' => 'error'], '401');
+
+        }
+
+    }
+
+
+    public function getDetails($id) {
+
+
+	    if(Auth::id() == $id) {
+
+
+	        $user = User::findOrFail(Auth::id());
+	        $user->details;
+
+	        return response()->json(['user_details' => $user], '200');
+
+        }
+
+        else {
+
+
+            return response()->json(['error' => 'error'], '401');
+
+        }
+
+    }
+
 }
