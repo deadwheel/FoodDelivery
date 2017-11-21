@@ -17,6 +17,7 @@ Download package and write some commands to be sure that everything will works f
 ```sh
 $ composer update
 $ php artisan migrate
+$ php artisan storage:link
 ```
 
 after this run:

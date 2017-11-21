@@ -16,7 +16,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
 
@@ -80,6 +80,7 @@
                     <ul class="nav nav-sidebar">
                         <li><a href="{{ URL::to('admin/roles/') }}">Roles</a></li>
                         <li><a href="{{ URL::to('admin/users/') }}">Users</a></li>
+                        <li><a href="{{ URL::to('admin/offers/') }}">Offers</a></li>
                     </ul>
                 </div>
 
