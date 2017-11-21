@@ -9,7 +9,7 @@ class Order extends Model
 	protected $table = 'orders';
 	//protected $guarded = [];
 
-    protected $visible = ['id','det'];
+    protected $visible = ['id','det','address', 'price', 'deliverer_id'];
 		
     public function offers(){
 

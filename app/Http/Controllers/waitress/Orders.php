@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Order;
 use App\Role;
 use App\User;
+use Config;
 
 class Orders extends Controller
 {
@@ -21,6 +22,15 @@ class Orders extends Controller
                 if($order->deliverer_id != $request->drivers[$item]) {
 
                     $order->deliverer_id = $request->drivers[$item];
+
+                    if(!is_null($request->drivers[$item])) {
+                        $order->state = Config::get('constants.driver_ready_to_go');
+                    }
+
+                    else {
+                        $order->state = null;
+                    }
+
                     $order->save();
 
                 }
@@ -30,6 +40,8 @@ class Orders extends Controller
 
 
         }
+
+        return redirect('waitress/orders')->with("success", "Edited");
         //dd($request->all());
 
     }
