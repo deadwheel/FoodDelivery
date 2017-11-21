@@ -42,7 +42,17 @@ Route::namespace('api')->group(function(){
 		Route::put('/user_details/{id}', 'UserController@update_details');
         Route::get('/user_details/{id}', 'UserController@getDetails');
         Route::get('/user_orders/{id}', 'OrderController@orders_list_user');
-		});
+
+            Route::group(['middleware' => ['role:driver']], function() {
+
+                Route::get('/driver/orders/{id}', 'driver\Driver@get_orders_by_id');
+                Route::post('/driver/take_it/{id}', 'driver\Driver@take_it');
+                Route::post('/driver/end_it/{id}', 'driver\Driver@status_delivered');
+                Route::post('/driver/update_pos/{id}', 'driver\Driver@update_position');
+
+            });
+
+        });
 	
 });
 
