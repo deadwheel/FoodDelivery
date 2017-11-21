@@ -24,7 +24,7 @@ class OrderController extends Controller
 
             'order_details.*.offer_id' => 'required|exists:offers,id',
             'order_details.*.quantity' => 'required|integer',
-            'order_address.*.isprofile' =>'required|boolean'
+            'order_address.isprofile' =>'required|boolean'
 
         ])->validate();
 
