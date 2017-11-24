@@ -10,6 +10,8 @@ use App\OrderOffer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\User;
+use PayPal\Api\Payment;
+use App\Payment as pay;
 
 class OrderController extends Controller
 {
@@ -19,7 +21,6 @@ class OrderController extends Controller
 		
        $area = json_decode($request->getContent(), true);
 
-
         Validator::make($area, [
 
             'order_details.*.offer_id' => 'required|exists:offers,id',
@@ -27,10 +28,24 @@ class OrderController extends Controller
             'order_address.isprofile' =>'required|boolean'
 
         ])->validate();
+		
+		$payment = $this->verify($area['payment_details']['paymentId'], json_decode($area['payment_details']['payment_client']));
 
         $zamowienie = new Order;
         $zamowienie->user_id = Auth::id();
         $zamowienie->save();
+		
+		$paym = new pay();
+		$paym->paypalPaymentId = $payment->payment->getId();
+		$paym->create_time = $payment->payment->getCreateTime();
+		$paym->update_time = $payment->payment->getUpdateTime();
+		$paym->state = $payment->payment->getState();
+		$paym->amount = $payment->amount_server;
+		$paym->currency = $payment->currency_server;		
+       
+			
+      	$zamowienie->payment()->save($paym);
+				
 
         $user_det = [];
 
@@ -84,4 +99,98 @@ class OrderController extends Controller
 
     }
 
+	private function verify($payment_id, $payment_client){
+		
+		 $response["error"] = false;
+         $response["message"] = "Payment verified successfully";
+        			
+		
+            try {
+     
+				$paymentId = $payment_id;
+							
+                $payment_client = $payment_client;
+				
+			    $apiContext = new \PayPal\Rest\ApiContext(
+                    
+						new \PayPal\Auth\OAuthTokenCredential(
+                        'AQP1-J5EhPqaqT3MCnzPW-zt9IFE8Cm8GTytaayY11DYMkMmoDTIFeIRKzRexDtfgmiwW2nMcrvGwlD6', // ClientID
+                        'EJ5tnuxfZ_sa5FpUcomBUJF9cHkCEKC5tQxZYBLkFW0sCFBY0BeWCBirSNJzUZbne7uwKSJs7K_3f7E_'      // ClientSecret
+                        )
+                );
+ 
+                // Gettin payment details by making call to paypal rest api
+                $payment = Payment::get($paymentId, $apiContext);
+ 
+                // Verifying the state approved
+                if ($payment->getState() != 'approved') {
+                    $response["error"] = true;
+                    $response["message"] = "Payment has not been verified. Status is " . $payment->getState();
+                    return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+				  }
+   
+                // Amount on client side
+                $amount_client = $payment_client->amount;
+ 
+                // Currency on client side
+                $currency_client = $payment_client->currency_code;
+  
+                // Paypal transactions
+                $transaction = $payment->getTransactions()[0];
+                // Amount on server side
+                $amount_server = $transaction->getAmount()->getTotal();
+                // Currency on server side
+                $currency_server = $transaction->getAmount()->getCurrency();
+				
+				$pay = new \stdClass;
+				$pay->payment = $payment;
+				$pay->amount_server  = $amount_server;
+				$pay->currency_server=$currency_server;
+				
+                $sale_state = $transaction->getRelatedResources()[0]->getSale()->getState();
+ 
+          				
+                // Verifying the amount
+                if ($amount_server != $amount_client) {
+                    $response["error"] = true;
+                    $response["message"] = "Payment amount doesn't matched.";
+					return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+                }
+ 
+                // Verifying the currency
+                if ($currency_server != $currency_client) {
+                    $response["error"] = true;
+                    $response["message"] = "Payment currency doesn't matched.";
+                    return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+                }
+ 
+                // Verifying the sale state
+                if ($sale_state != 'completed') {
+                    $response["error"] = true;
+                    $response["message"] = "Sale not completed";
+                    return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+                }
+             
+			 
+				return $pay;
+			 
+            } catch (\PayPal\Exception\PayPalConnectionException $exc) {
+                if ($exc->getCode() == 404) {
+                    $response["error"] = true;
+                    $response["message"] = "Payment not found!";
+                 return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+                } else {
+                    $response["error"] = true;
+                    $response["message"] = "Unknown error occurred!" . $exc->getMessage();
+                  return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+                }
+            } catch (Exception $exc) {
+                $response["error"] = true;
+                $response["message"] = "Unknown error occurred!" . $exc->getMessage();
+                return response()->json(['error' => $response], 200, [], JSON_NUMERIC_CHECK);
+            }
+				
+		
+	}
+	
 }

@@ -23,5 +23,11 @@ class Order extends Model
         return $this->belongsTo('App\User', 'user_id');
     }
 	
+	
+	public function payment(){
+		
+		return $this->hasOne('App\Payment','order_id');
+		
+	}
 
 }
