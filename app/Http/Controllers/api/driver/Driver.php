@@ -155,6 +155,31 @@ class Driver extends Controller
 
         }
     }
+	
+	
+	
+	public function cancel_it(Request $request, $id) {
+
+        $order = Order::findOrFail($id);
+
+        if(Auth::id() == $order->deliverer_id) {
+
+            $order->state = Config::get('constants.driver_ready_to_go');
+            $order->save();
+
+            return response()->json(['success' => 'success'], 200);
+
+
+        }
+
+        else {
+
+            return response()->json(['error' => 'Error'], 401);
+
+        }
+    }
+	
+	
 
     public function update_position(Request $request, $id) {
 
