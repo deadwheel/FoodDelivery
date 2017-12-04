@@ -49,6 +49,7 @@ Route::namespace('api')->group(function(){
                 Route::post('/driver/take_it/{id}', 'driver\Driver@take_it');
                 Route::post('/driver/end_it/{id}', 'driver\Driver@status_delivered');
                 Route::post('/driver/update_pos/{id}', 'driver\Driver@update_position');
+				Route::post('/driver/cancel_it/{id}', 'driver\Driver@cancel_it');
 				Route::get('/driver/get_active/', 'driver\Driver@get_active');
 
             });
