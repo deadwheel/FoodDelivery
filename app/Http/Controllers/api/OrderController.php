@@ -12,6 +12,8 @@ use Illuminate\Validation\Rule;
 use App\User;
 use PayPal\Api\Payment;
 use App\Payment as pay;
+use Config;
+use GuzzleHttp\Client;
 
 class OrderController extends Controller
 {
@@ -192,5 +194,109 @@ class OrderController extends Controller
 				
 		
 	}
+
+
+
+	public function get_status_order($id) {
+
+	    $order = Order::findOrFail($id);
+
+	    if(Auth::id() != $order->user_id) {
+
+            return response()->json(['status' => 'error', 'message' => 'Wrong order id'], 401, [], JSON_NUMERIC_CHECK);
+
+        }
+
+        else {
+
+
+            if ($order->state == Config::get('constants.order_paid')) {
+
+                return response()->json(['status' => 'ok', 'message' => 'W trakcie realizacji'], 200, [], JSON_NUMERIC_CHECK);
+
+            }
+
+            else if($order->state == Config::get('constants.driver_ready_to_go')) {
+
+                return response()->json(['status' => 'ok', 'message' => 'Twoje zamowienie jest juz u kierowcy'], 200, [], JSON_NUMERIC_CHECK);
+
+            }
+
+            else if($order->state == Config::get('constants.driver_OMW')) {
+
+
+                //TODO make somewhere config variable api key
+                //TODO make location user details
+
+                if($order->driver_loc != NULL) {
+
+                    $client = new Client();
+                    $response = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json', [
+                        'verify' => false,
+                        'query' => [
+
+                            'origins' => $order->driver_loc,
+                            'destinations' => $order->location,
+                            'language' => 'pl',
+                            'key' => 'AIzaSyDi9M1ZBjISCVryKPJkwjjT1LjjtY38Q4c'
+
+                        ]
+                    ]);
+
+                    if ($response->getStatusCode() == 200) {
+
+                        $body = json_decode($response->getBody(), true);
+
+                        if ($body["status"] == "OK" && $body["rows"][0]["elements"][0]["status"] == "OK") {
+
+
+                            return response()->json(['status' => 'ok', 'message' => 'Kierowca juz jedzie do ciebie i bedzie za okolo ' . $body["rows"][0]["elements"][0]["duration"]["text"] . ''], 200, [], JSON_NUMERIC_CHECK);
+
+                        }
+
+                        else {
+
+                            return response()->json(['status' => 'ok', 'message' => 'Kierowca juz jedzie do ciebie'], 200, [], JSON_NUMERIC_CHECK);
+
+                        }
+
+                    }
+
+                    else {
+
+                        return response()->json(['status' => 'ok', 'message' => 'Kierowca juz jedzie do ciebie'], 200, [], JSON_NUMERIC_CHECK);
+
+                    }
+
+                }
+
+
+                else {
+
+                    return response()->json(['status' => 'ok', 'message' => 'Kierowca juz jedzie do ciebie'], 200, [], JSON_NUMERIC_CHECK);
+
+                }
+
+            }
+
+            else if($order->state == Config::get('constants.order_delivered')) {
+
+                return response()->json(['status' => 'ok', 'message' => 'Dostarczono'], 200, [], JSON_NUMERIC_CHECK);
+
+
+            }
+
+            else {
+
+                return response()->json(['status' => 'error', 'message' => 'Undefined status'], 200, [], JSON_NUMERIC_CHECK);
+
+            }
+
+
+
+        }
+
+
+    }
 	
 }
