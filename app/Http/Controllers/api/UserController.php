@@ -146,10 +146,9 @@ use Response;
 	}
 
 
+public function update_details(Request $request) {
 
-	public function update_details(Request $request, $id) {
-
-	    if (Auth::id() == $id) {
+	    
 
 
             // TODO Validacja ew poprawic
@@ -163,21 +162,28 @@ use Response;
 
 
             ])->validate();
+	
+            /*$user = User::find(Auth::id())->details;
+	
+				*/
+					$data = $request->all();		
+					$user =  User::find(Auth::id())->details();
+					$user->updateOrCreate(
+   					 ['user_id' => Auth::id()],
+   					 $data
+						);
+					
+					return response()->json(['data' => $user->get()],'200');
+					
+        /*    if (is_null($user)) {
 
-            $user = User::find(Auth::id())->details;
-
-
-            if (is_null($user)) {
-
-                $userdet = new UserDetails;
+                $userdet = new UserDetails;"sadasd"
                 $userdet->fill(request()->all());
 
                 $user = User::find(Auth::id());
                 $user->details()->save($userdet);
 
-                return response()->json(['user_details' => $user->details],'200');
-
-
+                return response()->json(['data' => $user->details],'200');
 
 
             } else {
@@ -185,43 +191,24 @@ use Response;
                 $user->fill($request->all());
                 $user->save();
 
-                return response()->json(['user_details' => $user],'200');
+                return response()->json(['data' => $user],'200');
 
             }
 
-
-
+	*/
         }
+  
 
-        else {
+    public function getDetails() {
 
+	        $user = User::find(Auth::id());
+	    		
+	        if($user->details != null){
+	             return response()->json(['data' => $user->details()->get()], '200');
+				}
+     
 
-	        return response()->json(['error' => 'error'], '401');
-
-        }
-
-    }
-
-
-    public function getDetails($id) {
-
-
-	    if(Auth::id() == $id) {
-
-
-	        $user = User::findOrFail(Auth::id());
-	        $user->details;
-
-	        return response()->json(['user_details' => $user], '200');
-
-        }
-
-        else {
-
-
-            return response()->json(['error' => 'error'], '401');
-
-        }
+      
 
     }
 

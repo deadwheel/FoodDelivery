@@ -39,8 +39,10 @@ Route::namespace('api')->group(function(){
 		Route::post('/logout', 'UserController@logout');
 		Route::get('/offers','OfferController@index');
 		Route::post('/orders','OrderController@create');
-		Route::put('/user_details/{id}', 'UserController@update_details');
-        Route::get('/user_details/{id}', 'UserController@getDetails');
+		Route::get('/orders','OrderController@index');
+		Route::put('/user_details', 'UserController@update_details');
+      Route::get('/user_details', 'UserController@getDetails');
+	
         Route::get('/user_orders/{id}', 'OrderController@orders_list_user');
         Route::get('/order_status/{id}/', 'OrderController@get_status_order');
 

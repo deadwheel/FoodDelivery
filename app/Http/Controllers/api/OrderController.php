@@ -18,6 +18,34 @@ use GuzzleHttp\Client;
 class OrderController extends Controller
 {
  
+ 		public function index(Request $request){
+			
+		$orders = Order::where("user_id",$request->user()->id)->with("offers")->get();
+			
+		if($orders!=null){
+																	
+			$json = [];		
+						
+			foreach($orders as $order){
+			
+			 $stdC = new \stdClass;
+			 $stdC->id = $order->id;
+			 $stdC->location = $order->location;
+			 $stdC->driver_loc = $order->driver_loc;
+			 $stdC->status = $order->status;
+			 $stdC->offers = $order->offers;
+			 
+			 $json[] = $stdC;
+			 			
+			}
+					
+		
+				return response()->json(["data"=>$json], 200);
+			}else
+				return response()->json(['error' => 'error'], '401');
+	}
+ 
+ 
 	public function create(Request $request) {
 
 		
