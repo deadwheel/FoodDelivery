@@ -71,10 +71,10 @@ use Response;
 			$params = [
 		
     		'grant_type' => 'refresh_token',
+			'refresh_token' => $request->refresh_token,
     		'client_id' => '2',
     		'client_secret' => DB::table('oauth_clients')->where('id', '2')->value('secret'), 
-			'password' => $request->password,
-			'scope' => '*'	
+			'scope' => ''	
     		
     	];
 		
@@ -84,7 +84,12 @@ use Response;
 
     	$proxy = Request::create('oauth/token', 'POST');
 
-    	return Route::dispatch($proxy);
+		$response = Route::dispatch($proxy);	
+	  
+    	$json = (array)json_decode($response->getContent());
+		$json['role_id'] = Auth::id();
+		$response->setContent(json_encode($json));
+		return $response;
 
     }
 
