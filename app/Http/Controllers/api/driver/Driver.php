@@ -34,7 +34,7 @@ class Driver extends Controller
 
 						else {
 
-							$location = UserDetails::where('user_id', $orders->user_id)->get()->first()->toArray();
+							$location = $value['location'];
 
 						}
 
@@ -76,7 +76,7 @@ class Driver extends Controller
 
 						else {
 
-							$location = UserDetails::where('user_id', $value['user_id'])->get()->first()->toArray();
+							$location = $value['location'];
 
 						}
 
