@@ -14,39 +14,26 @@ use PayPal\Api\Payment;
 use App\Payment as pay;
 use Config;
 use GuzzleHttp\Client;
-use App\UserDetails;
 
 class OrderController extends Controller
 {
  
  		public function index(Request $request){
 			
-		$orders = Order::where("user_id",Auth::id())->with("offers")->get();
+		$orders = Order::where("user_id",$request->user()->id)->with("offers")->get();
 			
 		if($orders!=null){
 																	
-			$json = [];
-			
+			$json = [];		
 						
 			foreach($orders as $order){
 			
-			 $offers = [];
 			 $stdC = new \stdClass;
 			 $stdC->id = $order->id;
 			 $stdC->location = $order->location;
 			 $stdC->driver_loc = $order->driver_loc;
-			 $stdC->status = $order->state;
-			 $stdC->created_at = $order->created_at;
-			 //$stdC->offers = $order->offers;
-
-			 foreach($order->offers as $p){			 
-			 	
-				$quantity["quantity"] = $p->pivot->quantity;
-			 	$offers[] = array_merge($p->toArray(), $quantity);
-						 	 
-			}
-			
-			 $stdC->offers = $offers;
+			 $stdC->status = $order->status;
+			 $stdC->offers = $order->offers;
 			 
 			 $json[] = $stdC;
 			 			
@@ -72,32 +59,10 @@ class OrderController extends Controller
 
         ])->validate();
 		
-		$location_id = null;
-		$location = null;
 		$payment = $this->verify($area['payment_details']['paymentId'], json_decode($area['payment_details']['payment_client']));
 
-
-
-		if($area['order_address']['isprofile']){
-			
-				$opcja = 0;
-				
-				
-			}else {
-				
-					$opcja = 1;
-					$location = $area['order_address']['opt_address'];	
-			}				
-			
         $zamowienie = new Order;
         $zamowienie->user_id = Auth::id();
-		$zamowienie->is_optional_address = $opcja;
-		$zamowienie->location = $location;
-			
-			
-			   
-        
-		  $zamowienie->state =  Config::get('constants.order_paid');      
         $zamowienie->save();
 		
 		$paym = new pay();
