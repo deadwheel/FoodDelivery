@@ -73,19 +73,19 @@ class OrderController extends Controller
         ])->validate();
 		
 		$location_id = null;
-		$location = null;
+		$location = "";
 		$payment = $this->verify($area['payment_details']['paymentId'], json_decode($area['payment_details']['payment_client']));
 
 
 
 		if($area['order_address']['isprofile']){
 			
-				$opcja = 0;
+				$opcja = false;
 				
 				
 			}else {
 				
-					$opcja = 1;
+					$opcja = true;
 					$location = $area['order_address']['opt_address'];	
 			}				
 			
