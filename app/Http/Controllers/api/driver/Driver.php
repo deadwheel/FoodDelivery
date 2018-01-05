@@ -69,7 +69,7 @@ class Driver extends Controller
 				
 					foreach ($orders as $key => $value) {
 
-						if($value['is_optional_address'] == 1) {
+						if($value['is_optional_address'] == true) {
 
 							$location = $value['location'];
 						}
