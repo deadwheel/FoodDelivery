@@ -35,7 +35,7 @@
 
                         @else
 
-                            <img src="{{ config('constants.image_host') $value->image }}" style="height: 50px;" />
+                            <img src="{{ config('constants.image_host')}}{{ $value->name }}" style="height: 50px;" />
 
                         @endif
 
