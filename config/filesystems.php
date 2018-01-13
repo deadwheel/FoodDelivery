@@ -62,6 +62,22 @@ return [
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
+		
+		
+		'ftp' => [
+    'driver'   => 'ftp',
+    'host'     => 'fooddd.ugu.pl',
+    'username' => 'fooddd.ugu.pl',
+    'password' => 'zxcfg567',
+	'port' => 21,
+
+    // Optional FTP Settings...
+    // 'port'     => 21,
+    // 'root'     => '',
+    // 'passive'  => true,
+    // 'ssl'      => true,
+    // 'timeout'  => 30,
+		],
 
     ],
 

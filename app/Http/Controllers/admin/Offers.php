@@ -133,6 +133,13 @@ class Offers extends Controller
 
         if(!empty($request->file('offer'))) {
 
+			$path = $request->file('offer')->store(
+			'offers', 'ftp'
+			);
+			
+			$offer->image = Storage::url($path);
+		
+			/*
             if($path = $request->file('offer')->store('offers', 'public')) {
 
 
@@ -145,6 +152,7 @@ class Offers extends Controller
                 $offer->image = Storage::url($path);
 
             }
+			*/
 
         }
 
