@@ -134,9 +134,9 @@ class Offers extends Controller
         if(!empty($request->file('offer'))) {
 
 		
-			if($path = $request->file('offer')->store('offers', 'ftp');)
+			//if($path = $request->file('offer')->store('offers', 'ftp');)
 			
-			$offer->image = Storage::url($path);
+			//$offer->image = Storage::url($path);
 		
 			 if($path = $request->file('offer')->store('offers', 'ftp')) {
 
