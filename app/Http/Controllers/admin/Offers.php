@@ -134,21 +134,16 @@ class Offers extends Controller
         if(!empty($request->file('offer'))) {
 
 		
-			//if($path = $request->file('offer')->store('offers', 'ftp');)
-			
-			//$offer->image = Storage::url($path);
-		
 			 if($path = $request->file('offer')->store('offers', 'ftp')) {
 
 
-                //if (!is_null($offer->image)) {
+                if (!is_null($offer->image)) {
 
-                    //Storage::delete($offer->image);
+                    Storage::disk('ftp')->delete($offer->image);
 
-                //}
+                }
 
 				
-				//str_replace("/storage/", "/public/", $offer->image)
                 $offer->image = $path;
 
             }
