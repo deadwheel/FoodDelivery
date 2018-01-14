@@ -29,5 +29,12 @@ class Order extends Model
 		return $this->hasOne('App\Payment','order_id');
 		
 	}
+	
+	
+	public function Rdriver(){
+		
+		return $this->hasOne('App\Driver','order_id');
+		
+	}
 
 }

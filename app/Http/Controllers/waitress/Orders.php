@@ -20,16 +20,19 @@ class Orders extends Controller
 
                 $order = Order::findOrFail($item);
                 if($order->deliverer_id != $request->drivers[$item]) {
+					
+					
+					dd($order->Rdriver);
 
-                    $order->deliverer_id = $request->drivers[$item];
+                    //$order->deliverer_id = $request->drivers[$item];
 
-                    if(!is_null($request->drivers[$item])) {
+                    //if(!is_null($request->drivers[$item])) {
                         $order->state = Config::get('constants.driver_ready_to_go');
-                    }
+                    //}
 
-                    else {
-                        $order->state = null;
-                    }
+                    //else {
+                       // $order->state = null;
+                    //}
 
                     $order->save();
 
