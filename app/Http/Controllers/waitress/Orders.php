@@ -25,7 +25,7 @@ class Orders extends Controller
 					
 					$driv = Driver::updateOrCreate(
 						['order_id' => $order->id],
-						['deliverer_id' => $request->drivers[$item]]
+						['deliverer_id' => $request->drivers[$item],'driver_loc' => '']
 					);
 
                     //$order->deliverer_id = $request->drivers[$item];
