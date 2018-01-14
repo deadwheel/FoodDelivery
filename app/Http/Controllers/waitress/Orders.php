@@ -8,6 +8,7 @@ use App\Order;
 use App\Role;
 use App\User;
 use Config;
+use App\Driver;
 
 class Orders extends Controller
 {
@@ -22,7 +23,10 @@ class Orders extends Controller
                 if($order->deliverer_id != $request->drivers[$item]) {
 					
 					
-					dd($order->Rdriver);
+					$driv = Driver::updateOrCreate(
+						['order_id' => $order->id],
+						['deliverer_id' => $request->drivers[$item]]
+					);
 
                     //$order->deliverer_id = $request->drivers[$item];
 
