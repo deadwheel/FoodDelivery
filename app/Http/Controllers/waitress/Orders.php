@@ -20,7 +20,12 @@ class Orders extends Controller
             foreach ($request->ids as $item) {
 
                 $order = Order::findOrFail($item);
+				$products = Order::with('Rdriver')->get();
+				dd($products);
                 if($order->deliverer_id != $request->drivers[$item]) {
+					
+					
+					
 					
 					
 					$driv = Driver::updateOrCreate(
