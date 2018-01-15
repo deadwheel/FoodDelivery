@@ -63,6 +63,12 @@ class Offers extends Controller
             $offer->image = Storage::url($path);
 
         }
+		
+		else {
+			
+			$offer->image = "";
+			
+		}
 
 
         $offer->save();

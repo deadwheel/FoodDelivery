@@ -66,14 +66,14 @@ return [
 		
 		'ftp' => [
     'driver'   => 'ftp',
-    'host'     => 'fooddd.ugu.pl',
-    'username' => 'fooddd.ugu.pl',
-    'password' => 'zxcfg567',
+    'host'     => env('FTP_HOST'),
+    'username' => env('FTP_USERNAME'),
+    'password' => env('FTP_PASSWORD'),
 	'port' => 21,
 
     // Optional FTP Settings...
     // 'port'     => 21,
-    // 'root'     => '',
+    'root'     => 'htdocs',
     // 'passive'  => true,
     // 'ssl'      => true,
     // 'timeout'  => 30,
