@@ -34,7 +34,19 @@ class OrderController extends Controller
 			 $offers = [];
 			 $stdC = new \stdClass;
 			 $stdC->id = $order->id;
-			 $stdC->location = $order->location;
+			 
+			 if($order->is_optional_address) {
+				 
+				  $stdC->location = $order->location;
+				 
+			 }
+			 
+			 else {
+				 
+				$user_get = User::findOrFail(Auth::id())->with("details")->first();
+				$stdC->location = $user_get->details->address.", ".$user_get->details->postcode." ".$user_get->details->city;
+				 
+			 }
 			 
 			 
 			 $loc = "";
