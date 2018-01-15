@@ -204,13 +204,15 @@ class Driver extends Controller
             'position' => 'required|string'
 
         ])->validate();
-
-        $order = Order::findOrFail($id)->with('Rdriver');
-
+		
+        $order = Order::findOrFail($id);
+		
         if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
-
+		
+		
+			//dd($order->Rdriver);
             $order->Rdriver->driver_loc = $request->position;
-            $order->save();
+            $order->Rdriver->save();
 
             return response()->json(['success' => 'success'], 200);
 
