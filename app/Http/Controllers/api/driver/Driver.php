@@ -205,7 +205,7 @@ class Driver extends Controller
 
         ])->validate();
 
-        $order = Order::findOrFail($id);
+        $order = Order::findOrFail($id)->with('Rdriver');
 
         if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
 
