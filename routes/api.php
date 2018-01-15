@@ -33,10 +33,10 @@ Route::namespace('api')->group(function(){
 	Route::post('/refresh', 'UserController@refresh');
 	Route::post('/login','UserController@login');
 	Route::post('/register','UserController@register');
-
+	Route::post('/logout', 'UserController@logout');
+	
 	Route::middleware('auth:api')->group(function(){
 		
-		Route::post('/logout', 'UserController@logout');
 		Route::get('/offers','OfferController@index');
 		Route::post('/orders','OrderController@create');
 		Route::get('/orders','OrderController@index');
