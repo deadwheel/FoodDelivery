@@ -21,7 +21,7 @@ class OrderController extends Controller
  
  		public function index(Request $request){
 			
-		$orders = Order::where("user_id",Auth::id())->with("offers")->get();
+		$orders = Order::where("user_id",Auth::id())->with("offers")->with("Rdriver")->get();
 			
 		if($orders!=null){
 																	
@@ -30,11 +30,19 @@ class OrderController extends Controller
 						
 			foreach($orders as $order){
 			
+			
 			 $offers = [];
 			 $stdC = new \stdClass;
 			 $stdC->id = $order->id;
 			 $stdC->location = $order->location;
-			 $stdC->driver_loc = $order->driver_loc;
+			 
+			 
+			 $loc = "";
+			 if(!is_null($order->Rdriver)) {
+				 $loc = $order->Rdriver->driver_loc;
+			 }
+			 
+			 $stdC->driver_loc = $loc;
 			 $stdC->status = $order->state;
 			 $stdC->created_at = $order->created_at;
 			 //$stdC->offers = $order->offers;
@@ -72,7 +80,6 @@ class OrderController extends Controller
 
         ])->validate();
 		
-		$location_id = null;
 		$location = "";
 		$payment = $this->verify($area['payment_details']['paymentId'], json_decode($area['payment_details']['payment_client']));
 
@@ -103,7 +110,7 @@ class OrderController extends Controller
 		$paym = new pay();
 		$paym->paypalPaymentId = $payment->payment->getId();
 		$paym->create_time = $payment->payment->getCreateTime();
-		$paym->update_time = $payment->payment->getUpdateTime();
+		//$paym->update_time = $payment->payment->getUpdateTime();
 		$paym->state = $payment->payment->getState();
 		$paym->amount = $payment->amount_server;
 		$paym->currency = $payment->currency_server;		
@@ -289,17 +296,33 @@ class OrderController extends Controller
 
 
                 //TODO make somewhere config variable api key
-                //TODO make location user details
+                //TODO make location user details !DONE!
 
-                if($order->driver_loc != NULL) {
+                if(!is_null($order->Rdriver) &&  !empty($order->Rdriver->driver_loc)) {
+					
+					$user_loc = "";
+					
+					if($order->is_optional_address) {
+						
+						$user_loc = $order->location;
+						
+					}
+					
+					else {
+						
+						$user_get = User::findOrFail(Auth::id())->with("details")->first();
+						$user_loc = $user_get->details->address.", ".$user_get->details->postcode." ".$user_get->details->city;
+						
+					}
+					
 
                     $client = new Client();
                     $response = $client->request('GET', 'https://maps.googleapis.com/maps/api/distancematrix/json', [
                         'verify' => false,
                         'query' => [
 
-                            'origins' => $order->driver_loc,
-                            'destinations' => $order->location,
+                            'origins' => $order->Rdriver->driver_loc,
+                            'destinations' => $user_loc,
                             'language' => 'pl',
                             'key' => 'AIzaSyDi9M1ZBjISCVryKPJkwjjT1LjjtY38Q4c'
 

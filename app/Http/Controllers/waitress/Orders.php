@@ -20,33 +20,32 @@ class Orders extends Controller
             foreach ($request->ids as $item) {
 
                 $order = Order::findOrFail($item);
-				$products = Order::with('Rdriver')->where('order_id', 10)->get();
-				dd($products);
-                if($order->deliverer_id != $request->drivers[$item]) {
 					
 					
-					
-					
-					
-					$driv = Driver::updateOrCreate(
-						['order_id' => $order->id],
-						['deliverer_id' => $request->drivers[$item],'driver_loc' => '']
-					);
-
-                    //$order->deliverer_id = $request->drivers[$item];
-
-                    //if(!is_null($request->drivers[$item])) {
+                    if(!is_null($request->drivers[$item])) {
+						
+						$driv = Driver::updateOrCreate(
+							['order_id' => $order->id],
+							['deliverer_id' => $request->drivers[$item],'driver_loc' => '']
+						);
+						
                         $order->state = Config::get('constants.driver_ready_to_go');
-                    //}
+                    }
 
-                    //else {
-                       // $order->state = null;
-                    //}
+                    else {
+						
+						$zp = Driver::where("order_id", $order->id)->first();
+						if(!is_null($zp)) {
+						
+							$zp->delete();
+						
+						}
+						
+                        $order->state = Config::get('constants.order_paid');
+                    }
+
 
                     $order->save();
-
-                }
-                //echo $request->drivers[$item];
 
             }
 
@@ -54,7 +53,6 @@ class Orders extends Controller
         }
 
         return redirect('waitress/orders')->with("success", "Edited");
-        //dd($request->all());
 
     }
 
@@ -65,29 +63,11 @@ class Orders extends Controller
      */
     public function index()
     {
-        $orders = Order::with('offers')->get();
-        //$drivers = Role::with('users')->where('name', 'driver')->get();
+        $orders = Order::with('offers')->with('Rdriver')->get();
 
         $drivers = User::whereHas('roles', function($q){
             $q->where('name', 'driver');
         })->get();
-
-        //dd($drivers);
-
-/*        foreach ($orders as $order) {
-            echo $order->id;
-
-            foreach ($order->offers as $key => $value) {
-
-                echo $value->name;
-                echo $value->pivot->quantity;
-
-            }
-            echo $order->offers;
-            echo "<br />";
-
-        }
-        */
 
 
     return view('waitress.orders')->with('orders',$orders)->with('drivers',$drivers);

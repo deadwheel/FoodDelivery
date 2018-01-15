@@ -32,7 +32,7 @@
                                         <option value=""></option>
                                 @foreach($drivers as $key2 => $value2)
 
-                                        <option @if ($value2->id == $value->deliverer_id) selected="selected" @endif value="{{ $value2->id }}">{{ $value2->name }}</option>
+                                        <option @if ( !is_null($value->Rdriver) && $value2->id == $value->Rdriver->deliverer_id) selected="selected" @endif value="{{ $value2->id }}">{{ $value2->name }}</option>
 
 
                                 @endforeach
