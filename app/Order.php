@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
 	protected $table = 'orders';
-	//protected $guarded = [];
+	///protected $guarded = [];
 
     protected $visible = ['id','det','address', 'price', 'deliverer_id'];
 		
@@ -27,6 +27,13 @@ class Order extends Model
 	public function payment(){
 		
 		return $this->hasOne('App\Payment','order_id');
+		
+	}
+	
+	
+	public function Rdriver(){
+		
+		return $this->hasOne('App\Driver','order_id');
 		
 	}
 

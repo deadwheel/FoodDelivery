@@ -23,7 +23,13 @@ class Driver extends Controller
 			if($active == "active") {
 				
 				
-			$orders = Order::where('deliverer_id', Auth::id())->where('state', Config::get('constants.driver_OMW'))->first();
+			$orders = Order::where('state', Config::get('constants.driver_OMW'))->whereHas('Rdriver', function($q)
+			{
+				$q->where('deliverer_id', Auth::id());
+
+			})->first();
+			
+			//where('deliverer_id', Auth::id())->
 			
 					if($orders) {
 			
@@ -34,7 +40,8 @@ class Driver extends Controller
 
 						else {
 
-							$location = UserDetails::where('user_id', $orders->user_id)->get()->first()->toArray();
+							$user_get = User::findOrFail(Auth::id())->with("details")->first();
+							$location = $user_get->details->address.", ".$user_get->details->postcode." ".$user_get->details->city;
 
 						}
 
@@ -64,19 +71,26 @@ class Driver extends Controller
 			else {
             
 			
-				$orders = Order::where('deliverer_id', Auth::id())->where('state', Config::get('constants.driver_ready_to_go'))->get();
+				//$orders = Order::where('deliverer_id', Auth::id())->where('state', Config::get('constants.driver_ready_to_go'))->get();
+				
+				$orders = Order::where('state', Config::get('constants.driver_ready_to_go'))->whereHas('Rdriver', function($q)
+				{
+					$q->where('deliverer_id', Auth::id());
+
+				})->get();
 				
 				
 					foreach ($orders as $key => $value) {
 
-						if($value['is_optional_address'] == 1) {
+						if($value['is_optional_address'] == true) {
 
 							$location = $value['location'];
 						}
 
 						else {
 
-							$location = UserDetails::where('user_id', $value['user_id'])->get()->first()->toArray();
+							$user_get = User::findOrFail(Auth::id())->with("details")->first();
+							$location = $user_get->details->address.", ".$user_get->details->postcode." ".$user_get->details->city;
 
 						}
 
@@ -116,8 +130,10 @@ class Driver extends Controller
 
 
         $order = Order::findOrFail($id);
+		
+		//dd($order->Rdriver);
 
-        if(Auth::id() == $order->deliverer_id) {
+        if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
 
             $order->state = Config::get('constants.driver_OMW');
             $order->save();
@@ -139,7 +155,7 @@ class Driver extends Controller
 
         $order = Order::findOrFail($id);
 
-        if(Auth::id() == $order->deliverer_id) {
+        if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
 
             $order->state = Config::get('constants.order_delivered');
             $order->save();
@@ -162,7 +178,7 @@ class Driver extends Controller
 
         $order = Order::findOrFail($id);
 
-        if(Auth::id() == $order->deliverer_id) {
+        if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
 
             $order->state = Config::get('constants.driver_ready_to_go');
             $order->save();
@@ -188,13 +204,15 @@ class Driver extends Controller
             'position' => 'required|string'
 
         ])->validate();
-
+		
         $order = Order::findOrFail($id);
-
-        if(Auth::id() == $order->deliverer_id) {
-
-            $order->driver_loc = $request->position;
-            $order->save();
+		
+        if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
+		
+		
+			//dd($order->Rdriver);
+            $order->Rdriver->driver_loc = $request->position;
+            $order->Rdriver->save();
 
             return response()->json(['success' => 'success'], 200);
 

@@ -9,6 +9,7 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+		"ext-ftp": "*",
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/dbal": "^2.6",
         "fideloper/proxy": "~3.3",
@@ -55,7 +56,8 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover"
+            "@php artisan package:discover",
+			"chmod -R 777 storage", "php artisan passport:keys" 
         ]
     },
     "config": {

@@ -63,6 +63,12 @@ class Offers extends Controller
             $offer->image = Storage::url($path);
 
         }
+		
+		else {
+			
+			$offer->image = "";
+			
+		}
 
 
         $offer->save();
@@ -133,18 +139,21 @@ class Offers extends Controller
 
         if(!empty($request->file('offer'))) {
 
-            if($path = $request->file('offer')->store('offers', 'public')) {
+		
+			 if($path = $request->file('offer')->store('offers', 'ftp')) {
 
 
                 if (!is_null($offer->image)) {
 
-                    Storage::delete(str_replace("/storage/", "/public/", $offer->image));
+                    Storage::disk('ftp')->delete($offer->image);
 
                 }
 
-                $offer->image = Storage::url($path);
+				
+                $offer->image = $path;
 
             }
+			
 
         }
 

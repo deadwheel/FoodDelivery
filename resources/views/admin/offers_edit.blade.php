@@ -56,7 +56,7 @@
 
                 @else
 
-                    <img src="{{ asset($offer['image']) }}" style="height: 150px;" />
+                    <img src="{{ config('constants.image_host')}}{{ $offer['image'] }}" style="height: 150px;" />
 
                 @endif
             </div>

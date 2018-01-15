@@ -64,6 +64,18 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+									
+									@role('admin')
+									
+										<li><a href="{{ URL::to('admin') }}">Admin Panel</a></li>
+									
+									@endrole
+									
+									@role('waitress')
+									
+										<li><a href="{{ URL::to('waitress/orders/') }}">Waitress Panel</a></li>
+									
+									@endrole
                                 </ul>
                             </li>
                         @endguest

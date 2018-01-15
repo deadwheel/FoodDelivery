@@ -62,6 +62,22 @@ return [
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
+		
+		
+		'ftp' => [
+    'driver'   => 'ftp',
+    'host'     => env('FTP_HOST'),
+    'username' => env('FTP_USERNAME'),
+    'password' => env('FTP_PASSWORD'),
+	'port' => 21,
+
+    // Optional FTP Settings...
+    // 'port'     => 21,
+    'root'     => 'htdocs',
+    // 'passive'  => true,
+    // 'ssl'      => true,
+    // 'timeout'  => 30,
+		],
 
     ],
 

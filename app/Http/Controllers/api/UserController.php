@@ -95,6 +95,8 @@ use Response;
 
 	
 	public function logout(Request $request){
+		
+		if(Auth::check()) {
 	
 			$accessToken = Auth::user()->token();
 
@@ -104,6 +106,8 @@ use Response;
 
 			$accessToken->revoke();
 			$accessToken->delete();
+			
+		}
 				
 		
     	return response()->json([], 204);
