@@ -209,7 +209,7 @@ class Driver extends Controller
 
         if(!is_null($order->Rdriver) && Auth::id() == $order->Rdriver->deliverer_id) {
 
-            $order->driver_loc = $request->position;
+            $order->Rdriver->driver_loc = $request->position;
             $order->save();
 
             return response()->json(['success' => 'success'], 200);
